@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OPA Docs</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --kickoff: #7c3aed;
+            --treinamento: #059669;
+            --ativacao: #dc2626;
+            --atualizacao: #2563eb;
+            --golive: #ea580c;
+
+            --bg: #f4f4f5;
+            --card-bg: #ffffff;
+            --text: #18181b;
+            --text-muted: #71717a;
+            --border: #e4e4e7;
+            --input-bg: #fafafa;
+            --input-border: #d4d4d8;
+            --sidebar-bg: #18181b;
+            --sidebar-text: #e4e4e7;
+            --sidebar-muted: #71717a;
+            --sidebar-hover: #27272a;
+            --tag-bg: #f4f4f5;
+            --tag-text: #52525b;
+            --preview-bg: #f4f4f5;
+        }
+
+        [data-theme="dark"] {
+            --bg: #09090b;
+            --card-bg: #18181b;
+            --text: #fafafa;
+            --text-muted: #a1a1aa;
+            --border: #27272a;
+            --input-bg: #09090b;
+            --input-border: #3f3f46;
+            --sidebar-bg: #000000;
+            --sidebar-text: #d4d4d8;
+            --sidebar-muted: #52525b;
+            --sidebar-hover: #18181b;
+            --tag-bg: #27272a;
+            --tag-text: #a1a1aa;
+            --preview-bg: #27272a;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 260px;
+            min-width: 260px;
+            background: var(--sidebar-bg);
+            display: flex;
+            flex-direction: column;
+            padding: 24px 16px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            border-right: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .sidebar-logo {
+            font-size: 17px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.5px;
+            padding: 0 8px 20px;
+            border-bottom: 1px solid var(--sidebar-hover);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sidebar-logo span {
+            display: inline-block;
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--primary);
+            box-shadow: 0 0 8px var(--primary);
+        }
+
+        .sidebar-section {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--sidebar-muted);
+            padding: 0 8px;
+            margin: 16px 0 6px;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--sidebar-text);
+            text-decoration: none;
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            transition: background 0.15s, color 0.15s;
+            line-height: 1.3;
+        }
+        .sidebar a:hover { background: var(--sidebar-hover); color: #fff; }
+
+        .theme-btn {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid var(--sidebar-hover);
+        }
+        .theme-btn button {
+            width: 100%;
+            background: transparent;
+            color: var(--sidebar-text);
+            border: 1px solid var(--sidebar-hover);
+            padding: 9px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            text-align: left;
+            transition: background 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .theme-btn button:hover { background: var(--sidebar-hover); }
+
+        /* ── MAIN ── */
+        .main {
+            margin-left: 260px;
+            padding: 40px 48px;
+            flex: 1;
+            max-width: 860px;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+        .page-header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.8px;
+            color: var(--text);
+        }
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        /* ── CARD ── */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ── GRID ── */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+        .col-span-2 { grid-column: span 2; }
+
+        /* ── INPUTS ── */
+        .field { display: flex; flex-direction: column; gap: 5px; }
+        label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+        }
+
+        input, textarea, select {
+            padding: 9px 12px;
+            border: 1px solid var(--input-border);
+            background: var(--input-bg);
+            color: var(--text);
+            border-radius: 7px;
+            font-size: 13.5px;
+            font-family: 'DM Sans', sans-serif;
+            transition: border-color 0.15s, box-shadow 0.15s;
+            outline: none;
+        }
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
+        }
+        textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+        select { cursor: pointer; }
+
+        /* ── BUTTONS ── */
+        .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+
+        .btn {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12.5px;
+            font-family: 'DM Sans', sans-serif;
+            transition: opacity 0.15s, transform 0.1s;
+            color: white;
+            letter-spacing: 0.2px;
+        }
+        .btn:active { transform: scale(0.97); }
+        .btn:hover { opacity: 0.88; }
+        .btn-primary { background: var(--primary); }
+        .btn-slate { background: #52525b; }
+        .btn-green { background: var(--treinamento); }
+
+        /* ── AGENDA PILLS ── */
+        .agenda-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+        .pill {
+            padding: 6px 13px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            color: white;
+            font-family: 'DM Sans', sans-serif;
+            transition: opacity 0.15s, transform 0.1s;
+        }
+        .pill:hover { opacity: 0.85; }
+        .pill:active { transform: scale(0.96); }
+        .pill-kickoff    { background: var(--kickoff); }
+        .pill-config     { background: #0891b2; }
+        .pill-train      { background: var(--treinamento); }
+        .pill-fluxo      { background: #7c3aed; }
+        .pill-ativacao   { background: var(--ativacao); }
+        .pill-remarcado  { background: #78716c; }
+
+        /* ── TIPO SELECTOR ── */
+        .type-selector {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .type-btn {
+            padding: 9px 6px;
+            border-radius: 8px;
+            border: 1.5px solid var(--border);
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 600;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.15s;
+            line-height: 1.3;
+        }
+        .type-btn:hover { border-color: var(--primary); color: var(--text); }
+        .type-btn.active { color: white; border-color: transparent; }
+        .type-btn.active-kickoff   { background: var(--kickoff); }
+        .type-btn.active-trein     { background: var(--treinamento); }
+        .type-btn.active-ativacao  { background: var(--ativacao); }
+        .type-btn.active-atualiz   { background: var(--atualizacao); }
+        .type-btn.active-golive    { background: var(--golive); }
+
+        /* ── TRAINING SUBTYPE ── */
+        .training-type-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .train-btn {
+            padding: 9px;
+            border-radius: 8px;
+            border: 1.5px solid var(--border);
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 600;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.15s;
+        }
+        .train-btn:hover { border-color: var(--treinamento); color: var(--text); }
+        .train-btn.active {
+            background: var(--treinamento);
+            color: white;
+            border-color: transparent;
+        }
+
+        /* ── DIVIDER ── */
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 20px 0;
+        }
+
+        /* ── PREVIEW ── */
+        .preview-wrap {
+            display: none;
+            margin-top: 20px;
+            position: relative;
+        }
+        .preview-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .preview-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+        }
+        .preview-box {
+            background: var(--preview-bg);
+            color: #000;
+            border-radius: 8px;
+            padding: 16px;
+            white-space: pre-wrap;
+            font-size: 13.5px;
+            font-family: 'DM Mono', monospace;
+            line-height: 1.65;
+            border-left: 3px solid var(--primary);
+        }
+        [data-theme="dark"] .preview-box { color: #e4e4e7; }
+
+        .copy-btn-float {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            font-size: 11.5px;
+            font-weight: 600;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+            transition: opacity 0.15s;
+        }
+        .copy-btn-float:hover { opacity: 0.85; }
+
+        /* ── BADGE ── */
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: white;
+        }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            background: #18181b;
+            color: #fafafa;
+            padding: 11px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            font-family: 'DM Sans', sans-serif;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+            transform: translateY(60px);
+            opacity: 0;
+            transition: transform 0.25s, opacity 0.25s;
+            pointer-events: none;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+
+        /* ── CHAR COUNTER ── */
+        .field-footer { display: flex; justify-content: flex-end; margin-top: 3px; }
+        .char-count { font-size: 11px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+
+        /* ── INFO ROW ── */
+        .info-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 9px 12px;
+            background: rgba(99,102,241,0.06);
+            border-radius: 7px;
+            font-size: 12.5px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            border: 1px solid rgba(99,102,241,0.15);
+        }
+
+        .fields-anim {
+            animation: fadeIn 0.2s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <span></span> OPA Docs
+        </div>
+
+        <div class="sidebar-section">OPA</div>
+        <a href="https://drive.google.com/drive/u/0/folders/1kjBm98Td9gxHJq1oUmsyYNzsAjvgdab_" target="_blank">📁 Drive Treinamentos</a>
+        <a href="https://docs.google.com/spreadsheets/d/1HIPXuBUCFtnxoPTjqtIRzhgIv5748fjuhLSRmgB1Fgo" target="_blank">📊 Planilha de Gravações</a>
+        <a href="https://www.canva.com/design/DAHSqIcBk8o/eVEd1fzvL7ulYClQUza1Pg/edit" target="_blank">🎨 Apresentação (Canva)</a>
+        <a href="https://my.nativeforms.com/5RVZm1jZmEGUwNzUR1Db" target="_blank">📝 Form Onboarding</a>
+        <a href="https://docs.google.com/spreadsheets/d/1bvo3E6hSCnYUSEk3xTHQ74QQVk1Dh64baUCAUwGiIlo" target="_blank">⚠️ Inconsistência Comercial</a>
+
+        <div class="theme-btn">
+            <button onclick="toggleTheme()">
+                <span id="theme-icon">🌙</span> Alternar tema
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+        <div class="page-header">
+            <h1>Otimizador de Documentação</h1>
+            <p>Preencha os dados uma vez e gere todos os padrões necessários.</p>
+        </div>
+
+        <!-- CARD: DADOS GERAIS -->
+        <div class="card">
+            <div class="card-title">📌 Dados do Cliente</div>
+            <div class="grid-2">
+                <div class="field">
+                    <label>ID do Cliente</label>
+                    <input type="text" id="clientId" placeholder="Ex: 1234">
+                </div>
+                <div class="field">
+                    <label>Nome do Cliente</label>
+                    <input type="text" id="clientName" placeholder="Ex: Maickol Villarreal">
+                </div>
+                <div class="field">
+                    <label>Protocolo Atual</label>
+                    <input type="text" id="protocol" placeholder="Ex: OPA20263338495">
+                </div>
+                <div class="field">
+                    <label>Data</label>
+                    <input type="date" id="currentDate">
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="card-title" style="margin-bottom:12px;">📅 Agenda Google</div>
+            <div class="agenda-pills">
+                <button class="pill pill-kickoff"   onclick="copyAgenda('Kickoff')">Kickoff</button>
+                <button class="pill pill-config"    onclick="copyAgenda('Configuração de Canais')">Config. Canais</button>
+                <button class="pill pill-train"     onclick="copyAgenda('Treinamento')">Treinamento</button>
+                <button class="pill pill-fluxo"     onclick="copyAgenda('Configuração de Fluxo')">Fluxo</button>
+                <button class="pill pill-ativacao"  onclick="copyAgenda('Ativação de Canais')">Ativação</button>
+                <button class="pill pill-remarcado" onclick="copyAgenda('Remarcado')">Remarcado</button>
+            </div>
+        </div>
+
+        <!-- CARD: COMENTÁRIO JIRA -->
+        <div class="card">
+            <div class="card-title">🚀 Comentários Jira</div>
+
+            <!-- TYPE SELECTOR -->
+            <div class="type-selector">
+                <button class="type-btn active active-kickoff"  data-type="kickoff"    onclick="setType('kickoff')">🟣<br>Kickoff</button>
+                <button class="type-btn"                        data-type="treinamento" onclick="setType('treinamento')">🟢<br>Treinamento</button>
+                <button class="type-btn"                        data-type="ativacao"    onclick="setType('ativacao')">🔴<br>Ativação</button>
+                <button class="type-btn"                        data-type="atualizacao" onclick="setType('atualizacao')">🔵<br>Atualização</button>
+                <button class="type-btn"                        data-type="golive"      onclick="setType('golive')">🟠<br>Go-Live</button>
+            </div>
+
+            <!-- DYNAMIC FIELDS -->
+            <div id="fields-container" class="fields-anim"></div>
+
+            <!-- GENERATE BUTTON -->
+            <div class="btn-row" style="margin-top:20px;">
+                <button class="btn btn-primary" onclick="generateJira()">⚡ Gerar Comentário</button>
+                <button class="btn btn-slate"   onclick="clearFields()">🗑️ Limpar Campos</button>
+            </div>
+
+            <!-- PREVIEW -->
+            <div id="preview-wrap" class="preview-wrap">
+                <div class="preview-header">
+                    <span class="preview-label">Preview</span>
+                    <button class="copy-btn-float" onclick="copyManual()">📋 Copiar</button>
+                </div>
+                <div id="preview" class="preview-box"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast">✅ <span id="toast-msg">Copiado!</span></div>
+
+    <script>
+        // ── STATE ──
+        let currentType = 'kickoff';
+        let currentTrainSubtype = 'configs';
+        const isDark = () => document.documentElement.getAttribute('data-theme') === 'dark';
+
+        // ── TRAINING DEFAULT TEXTS ──
+        const trainDefaults = {
+            configs: 'dashboard inicial, usuários, menu configurações ( empresas, etiquetas, departamentos, motivos de atendimentos, feriados, pausas, permissões )',
+            fluxo:   'agentes virtuais e fluxo de comunicação.',
+            usab:    'Opções dentro de um atendimento ( transferir, participantes, ligação do whatsapp, encerrar, dashboard do cliente, atalhos de chat ), dashboard inicial, dashboard analítico, menu de atendimento encerrados, menu atendimentos com o bot, menu atendimentos em andamentos, central de ajuda, manoel, opções de personalização do opa ( modo escuro/claro ), chat e grupos internos para conversa dentro do opa.'
+        };
+
+        // ── INIT ──
+        document.getElementById('currentDate').valueAsDate = new Date();
+        renderFields();
+
+        // ── THEME ──
+        function toggleTheme() {
+            const html = document.documentElement;
+            const dark = html.getAttribute('data-theme') === 'dark';
+            if (dark) { html.removeAttribute('data-theme'); document.getElementById('theme-icon').textContent = '🌙'; }
+            else       { html.setAttribute('data-theme','dark'); document.getElementById('theme-icon').textContent = '☀️'; }
+        }
+
+        // ── TYPE SELECTOR ──
+        const typeClasses = { kickoff:'active-kickoff', treinamento:'active-trein', ativacao:'active-ativacao', atualizacao:'active-atualiz', golive:'active-golive' };
+
+        function setType(type) {
+            currentType = type;
+            document.querySelectorAll('.type-btn').forEach(b => {
+                b.classList.remove('active','active-kickoff','active-trein','active-ativacao','active-atualiz','active-golive');
+                if (b.dataset.type === type) b.classList.add('active', typeClasses[type]);
+            });
+            document.getElementById('preview-wrap').style.display = 'none';
+            renderFields();
+        }
+
+        // ── TRAINING SUBTYPE ──
+        function setTrainSubtype(sub) {
+            currentTrainSubtype = sub;
+            document.querySelectorAll('.train-btn').forEach(b => {
+                b.classList.toggle('active', b.dataset.sub === sub);
+            });
+            const ta = document.getElementById('subjects');
+            if (ta) ta.value = trainDefaults[sub];
+        }
+
+        // ── RENDER FIELDS ──
+        function renderFields() {
+            const c = document.getElementById('fields-container');
+            c.className = 'fields-anim';
+            void c.offsetWidth; // reflow para reiniciar animação
+
+            if (currentType === 'kickoff') {
+                c.innerHTML = `
+                    <div class="grid-2">
+                        <div class="field">
+                            <label>Participantes</label>
+                            <input type="text" id="part" placeholder="Ex: Larissa e Ana Julia">
+                        </div>
+                        <div class="field">
+                            <label>Pontos Destacados pelo Cliente</label>
+                            <textarea id="highlights" placeholder="Liste os pontos levantados..."></textarea>
+                        </div>
+                        <div class="field">
+                            <label>Ações Executadas</label>
+                            <textarea id="actions_exec" placeholder="O que foi feito na reunião..."></textarea>
+                        </div>
+                        <div class="field">
+                            <label>Reuniões Agendadas</label>
+                            <textarea id="next_meetings" placeholder="Próximas reuniões marcadas..."></textarea>
+                        </div>
+                    </div>`;
+
+            } else if (currentType === 'treinamento') {
+                c.innerHTML = `
+                    <div class="info-row">💡 Selecione o tipo de treinamento para preencher os assuntos automaticamente.</div>
+                    <div class="training-type-row">
+                        <button class="train-btn active" data-sub="configs"  onclick="setTrainSubtype('configs')">⚙️ Configurações Gerais</button>
+                        <button class="train-btn"        data-sub="fluxo"    onclick="setTrainSubtype('fluxo')">🔀 Fluxo de Comunicação</button>
+                        <button class="train-btn"        data-sub="usab"     onclick="setTrainSubtype('usab')">🖥️ Usabilidade</button>
+                    </div>
+                    <div class="grid-2">
+                        <div class="field">
+                            <label>Nº do Treinamento</label>
+                            <input type="number" id="train_num" placeholder="Ex: 1" min="1">
+                        </div>
+                        
+                        <div class="field">
+                            <label>Participantes</label>
+                            <input type="text" id="part" placeholder="Ex: Equipe Operacional e Nivardo">
+                        </div>
+                        <div class="field col-span-2">
+                            <label>Assuntos Abordados</label>
+                            <textarea id="subjects">${trainDefaults['configs']}</textarea>
+                        </div>
+                        <div class="field">
+                            <label>Duração (horas usadas)</label>
+                            <input type="text" id="duration" placeholder="Ex: 1:00 hora">
+                        </div>
+                        <div class="field">
+                            <label>Horas Restantes</label>
+                            <input type="text" id="hours_left" placeholder="Ex: 2:00 horas restantes">
+                        </div>
+                        <div class="field col-span-2">
+                            <label>Observações</label>
+                            <textarea id="observations" placeholder="Ex: Cliente participativo e com poucas dúvidas"></textarea>
+                        </div>
+                        <div class="field col-span-2">
+                            <label>Reuniões Agendadas</label>
+                            <textarea id="next_meetings" placeholder="Ex: 2° Treinamento dia 19/05 às 10:00"></textarea>
+                        </div>
+                    </div>`;
+                // garante que o botão ativo bate com o subtype atual
+                document.querySelectorAll('.train-btn').forEach(b => {
+                    b.classList.toggle('active', b.dataset.sub === currentTrainSubtype);
+                });
+
+            } else if (currentType === 'ativacao') {
+                c.innerHTML = `
+                    <div class="grid-2">
+                        <div class="field">
+                            <label>Canal</label>
+                            <input type="text" id="channel" placeholder="Ex: WhatsApp">
+                        </div>
+                        <div class="field">
+                            <label>Participantes</label>
+                            <input type="text" id="participantes" placeholder="Ex: Telecom net">
+                        </div>
+                        <div class="field">
+                            <label>Número</label>
+                            <input type="text" id="phone" placeholder="Ex: +55 49 9999-9999">
+                        </div>
+                        <div class="field">
+                            <label>FB Profile / ID</label>
+                            <input type="text" id="fbid" placeholder="Ex: 123456789">
+                        </div>
+                        <div class="field">
+                            <label>WABA ID</label>
+                            <input type="text" id="waba" placeholder="Ex: 987654321">
+                        </div>
+                        <div class="field">
+                            <label>Nome Portfólio</label>
+                            <input type="text" id="portfolio" placeholder="Ex: Telecom net">
+                        </div>
+                    </div>`;
+
+            } else if (currentType === 'atualizacao') {
+                c.innerHTML = `
+                    <div class="field">
+                        <label>Situação do Andamento</label>
+                        <textarea id="status_text" style="min-height:120px;" placeholder="Descreva o status atual do cliente..."></textarea>
+                    </div>`;
+
+            } else if (currentType === 'golive') {
+                c.innerHTML = `
+    <div class="grid-3">
+        <div class="field">
+            <label>Horas Previstas em Contrato</label>
+            <input type="number" id="h_prev" value="3" min="0">
+        </div>
+        <div class="field">
+            <label>Horas Adicionais</label>
+            <input type="number" id="h_add" value="0" min="0">
+        </div>
+        <div class="field">
+            <label>Qtd. Templates</label>
+            <input type="number" id="templates_qty" placeholder="Ex: 5" min="0">
+        </div>
+    </div>
+
+    <!-- Check-list de Encerramento -->
+    <div class="grid-2" style="margin-top: 15px;">
+        <div class="field">
+            <label>Dores/problemas trazidos no Kickoff foram solucionados?</label>
+            <select id="dores_solucionadas">
+                <option value="">Selecione...</option>
+                <option value="Sim">Sim</option>
+                <option value="Não">Não</option>
+                <option value="Parcialmente">Parcialmente</option>
+            </select>
+        </div>
+        
+        <div class="field">
+            <label>Durante os treinamentos, o cliente fez as tarefas ou as configurações ficaram por sua conta?</label>
+            <select id="responsabilidade_tarefas">
+                <option value="">Selecione...</option>
+                <option value="Cliente fez as tarefas">Cliente fez as tarefas</option>
+                <option value="Ficou por minha conta">Ficou por minha conta</option>
+                <option value="Responsabilidade dividida">Responsabilidade dividida</option>
+            </select>
+        </div>
+        
+        <div class="field">
+            <label>O Fluxo de Comunicação Personalizado foi configurado e está funcionando?</label>
+            <select id="fluxo_personalizado">
+                <option value="">Selecione...</option>
+                <option value="Sim">Sim</option>
+                <option value="Não">Não</option>
+                <option value="Não se aplica">Não possuía / Não se aplica</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label>Os Canais de Comunicação contratados foram ativados?</label>
+            <select id="canais_ativados">
+                <option value="">Selecione...</option>
+                <option value="Sim">Sim</option>
+                <option value="Não">Não</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label>O Banco de Templates foi criado?</label>
+            <select id="templates_criados">
+                <option value="">Selecione...</option>
+                <option value="Sim">Sim</option>
+                <option value="Não">Não</option>
+                <option value="Não se aplica">Não contratou / Não se aplica</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label>O link da pasta do Drive foi enviado ao cliente?</label>
+            <select id="link_drive">
+                <option value="">Selecione...</option>
+                <option value="Sim">Sim</option>
+                <option value="Não">Não</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label>Ambiente de I.A: o cartão foi direcionado ao time responsável?</label>
+            <select id="ia_cartao">
+                <option value="">Selecione...</option>
+                <option value="Sim">Sim</option>
+                <option value="Não">Não</option>
+                <option value="Não se aplica">Não contratou / Não se aplica</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label>A pesquisa CSAT foi enviada ao cliente?</label>
+            <select id="pesquisa_csat">
+                <option value="">Selecione...</option>
+                <option value="Sim">Sim</option>
+                <option value="Não">Não</option>
+                <option value="SeraEnviado">Será enviado no acompanhamento</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label>Backup e Rotinas da base foram configuradas?</label>
+            <select id="backup_rotinas">
+                <option value="">Selecione...</option>
+                <option value="Sim">Sim</option>
+                <option value="Não">Não</option>
+            </select>
+        </div>
+        <div class="field col-span-2">
+                            <label>Observações</label>
+                            <textarea id="observations" placeholder="Ex: Cliente participativo e com poucas dúvidas"></textarea>
+        </div>
+    </div>
+`;
+            }
+        }
+
+        // ── AGENDA COPY ──
+        function copyAgenda(step) {
+            const id   = document.getElementById('clientId').value.trim();
+            const name = document.getElementById('clientName').value.trim();
+            if (!id && !name) { showToast('⚠️ Preencha ID e Nome do Cliente'); return; }
+            const text = `${step} - ${id} - ${name}`;
+            copyToClipboard(text);
+            showToast(`📅 Agenda copiada: ${step}`);
+        }
+
+        // ── GENERATE ──
+        function generateJira() {
+            const protocol = document.getElementById('protocol').value.trim();
+            const client   = document.getElementById('clientName').value.trim();
+            const rawDate  = document.getElementById('currentDate').value;
+            const date     = rawDate ? rawDate.split('-').reverse().join('/') : '—';
+
+            let result = '';
+            const previewDiv = document.getElementById('preview');
+            const colorMap   = { kickoff:'var(--kickoff)', treinamento:'var(--treinamento)', ativacao:'var(--ativacao)', atualizacao:'var(--atualizacao)', golive:'var(--golive)' };
+
+            switch (currentType) {
+                case 'kickoff': {
+                    const part      = v('part');
+                    const highlights= v('highlights');
+                    const acts      = v('actions_exec');
+                    const meetings  = v('next_meetings');
+                    result =
+`KICKOFF
+
+Onboarding realizado em ${date} com ${part}.
+
+Pontos destacados pelo cliente:
+${highlights}
+
+Ações executadas:
+${acts}
+
+Reuniões agendadas:
+${meetings}
+
+Protocolo: ${protocol}`;
+                    break;
+                }
+                case 'treinamento': {
+                    const num      = v('train_num');
+                    const part     = v('part');
+                    const subj     = v('subjects');
+                    const dur      = v('duration');
+                    const left     = v('hours_left');
+                    const obs      = v('observations');
+                    const meetings = v('next_meetings');
+
+                    const ordinal = num ? `${num}°` : '';
+                    let txt =
+`TREINAMENTO
+
+${ordinal} Treinamento feito em ${date} com ${part}.
+
+Assuntos abordados: ${subj}
+
+Duração: ${dur} / ${left}
+
+Observações: ${obs}`;
+
+                    if (meetings.trim()) txt += `\n\nReuniões agendadas:\n${meetings}`;
+                    txt += `\n\nProtocolo: ${protocol}`;
+                    result = txt;
+                    break;
+                }
+                case 'ativacao': {
+                    result =
+`ATIVAÇÃO DE CANAIS
+
+Participantes: ${v('participantes')}
+Nome Portfólio: ${v('portfolio')}
+Canal ativo: ${v('channel')}
+Número ativo: ${v('phone')}
+Perfil/FB ID: ${v('fbid')}
+WABA ID: ${v('waba')}
+Protocolo: ${protocol}`;
+                    break;
+                }
+                case 'atualizacao': {
+                    result =
+`ATUALIZAÇÃO
+
+${v('status_text')}
+
+Protocolo: ${protocol}`;
+                    break;
+                }
+                case 'golive': {
+    // Capturando horas e quantidades
+    const hPrev = v('h_prev') || '0';
+    const hAdd  = v('h_add')  || '0';
+    const tmpl  = v('templates_qty') || '0';
+    
+    // Capturando os selects do checklist
+    const dores = v('dores_solucionadas') || 'Não preenchido';
+    const tarefas = v('responsabilidade_tarefas') || 'Não preenchido';
+    const fluxo = v('fluxo_personalizado') || 'Não preenchido';
+    const canais = v('canais_ativados') || 'Não preenchido';
+    const templatesCriados = v('templates_criados') || 'Não preenchido';
+    const drive = v('link_drive') || 'Não preenchido';
+    const ia = v('ia_cartao') || 'Não preenchido';
+    const csat = v('pesquisa_csat') || 'Não preenchido';
+    const backup = v('backup_rotinas') || 'Não preenchido';
+
+    result = 
+`Go-Live
+
+A validação do Go Live foi concluída com sucesso. O checklist utilizado teve como base a proposta comercial adquirida pelo cliente, garantindo que todas as entregas previstas em contrato fossem contempladas. As configurações básicas do sistema foram realizadas, incluindo a ativação dos canais contratados e a definição dos fluxos conforme as necessidades levantadas junto ao cliente. O horário de suporte foi configurado conforme acordado.
+
+Ao todo, foram realizadas ${hPrev} horas de treinamento previstas em contrato.
+
+📋 CHECKLIST DE ENCERRAMENTO
+- Dores/problemas trazidos no Kickoff solucionados: ${dores}
+- Realização das tarefas durante treinamento: ${tarefas}
+- Fluxo de Comunicação Personalizado configurado: ${fluxo}
+- Canais de Comunicação ativados: ${canais}
+- Banco de Templates criado: ${templatesCriados}
+- Link da pasta do Drive enviado: ${drive}
+- Ambiente de I.A (cartão direcionado ao time): ${ia}
+- Pesquisa CSAT enviada: ${csat}
+- Backup e Rotinas configurados: ${backup}`;
+
+    break;
+}
+            }
+
+            previewDiv.style.borderLeftColor = colorMap[currentType];
+            previewDiv.innerText = result;
+            const wrap = document.getElementById('preview-wrap');
+            wrap.style.display = 'block';
+            wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+            copyToClipboard(result);
+            showToast('⚡ Comentário gerado e copiado!');
+        }
+
+        // ── COPY MANUAL ──
+        function copyManual() {
+            copyToClipboard(document.getElementById('preview').innerText);
+            showToast('📋 Copiado para a área de transferência!');
+        }
+
+        // ── CLEAR FIELDS ──
+        function clearFields() {
+            document.querySelectorAll('#fields-container input, #fields-container textarea').forEach(el => {
+                if (el.type === 'number') return;
+                el.value = '';
+            });
+            document.getElementById('preview-wrap').style.display = 'none';
+            showToast('🗑️ Campos limpos');
+        }
+
+        // ── HELPERS ──
+        function v(id) {
+            const el = document.getElementById(id);
+            return el ? el.value.trim() : '';
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).catch(() => {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+            });
+        }
+
+        let toastTimer;
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toast-msg');
+            msgEl.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+        }
+    </script>
+</body>
+</html>
