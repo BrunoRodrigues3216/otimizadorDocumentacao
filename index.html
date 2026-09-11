@@ -451,6 +451,7 @@
         <a href="https://www.canva.com/design/DAHSqIcBk8o/eVEd1fzvL7ulYClQUza1Pg/edit" target="_blank">🎨 Apresentação (Canva)</a>
         <a href="https://my.nativeforms.com/5RVZm1jZmEGUwNzUR1Db" target="_blank">📝 Form Onboarding</a>
         <a href="https://docs.google.com/spreadsheets/d/1bvo3E6hSCnYUSEk3xTHQ74QQVk1Dh64baUCAUwGiIlo" target="_blank">⚠️ Inconsistência Comercial</a>
+        <a href="https://dashboardopa.onrender.com/" target="_blank">📊 Dashboard</a>
 
         <div class="theme-btn">
             <button onclick="toggleTheme()">
@@ -484,7 +485,7 @@
                 </div>
                 <div class="field">
                     <label>Data</label>
-                    <input type="date" id="currentDate">
+                    <input type="datetime-local" id="currentDate">
                 </div>
             </div>
 
@@ -550,8 +551,33 @@
             usab:    'Opções dentro de um atendimento ( transferir, participantes, ligação do whatsapp, encerrar, dashboard do cliente, atalhos de chat ), dashboard inicial, dashboard analítico, menu de atendimento encerrados, menu atendimentos com o bot, menu atendimentos em andamentos, central de ajuda, manoel, opções de personalização do opa ( modo escuro/claro ), chat e grupos internos para conversa dentro do opa.'
         };
 
+        // ── PENDENCIES SCRIPT INJECTION ──
+        function addPendencyRow() {
+            const container = document.getElementById('pendencies-container');
+            if (!container) return;
+            
+            const row = document.createElement('div');
+            row.className = 'pendency-row';
+            row.style.display = 'flex';
+            row.style.gap = '8px';
+            row.style.marginTop = '4px';
+            
+            row.innerHTML = `
+                <input type="text" class="pendency-text" placeholder="Descreva a pendência..." style="flex: 1;">
+                <select class="pendency-resp" style="width: 130px; cursor: pointer;">
+                    <option value="Consultor">Consultor</option>
+                    <option value="Cliente">Cliente</option>
+                </select>
+                <button type="button" onclick="this.parentElement.remove()" class="btn btn-slate" style="padding: 0 12px; font-size: 13px; font-weight: bold; background: #ef4444;" title="Remover">X</button>
+            `;
+            
+            container.appendChild(row);
+        }
+
         // ── INIT ──
-        document.getElementById('currentDate').valueAsDate = new Date();
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        document.getElementById('currentDate').value = now.toISOString().slice(0, 16);
         renderFields();
 
         // ── THEME ──
@@ -642,10 +668,30 @@
                             <label>Horas Restantes</label>
                             <input type="text" id="hours_left" placeholder="Ex: 2:00 horas restantes">
                         </div>
+                        
                         <div class="field col-span-2">
                             <label>Observações</label>
                             <textarea id="observations" placeholder="Ex: Cliente participativo e com poucas dúvidas"></textarea>
                         </div>
+                        
+                        <div class="field col-span-2">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                                <label style="margin-bottom: 0;">Pendências Atuais</label>
+                                <button type="button" onclick="addPendencyRow()" class="btn btn-green" style="padding: 4px 10px; font-size: 11px; margin: 0;">+ Adicionar Pendência</button>
+                            </div>
+                            <div id="pendencies-container" style="display: flex; flex-direction: column; gap: 8px;">
+                                <!-- Linha inicial padrão -->
+                                <div class="pendency-row" style="display: flex; gap: 8px; margin-top: 4px;">
+                                    <input type="text" class="pendency-text" placeholder="Descreva a pendência..." style="flex: 1;">
+                                    <select class="pendency-resp" style="width: 130px; cursor: pointer;">
+                                        <option value="Consultor">Consultor</option>
+                                        <option value="Cliente">Cliente</option>
+                                    </select>
+                                    <button type="button" onclick="this.parentElement.remove()" class="btn btn-slate" style="padding: 0 12px; font-size: 13px; font-weight: bold; background: #ef4444;" title="Remover">X</button>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="field col-span-2">
                             <label>Reuniões Agendadas</label>
                             <textarea id="next_meetings" placeholder="Ex: 2° Treinamento dia 19/05 às 10:00"></textarea>
@@ -821,7 +867,15 @@
             const protocol = document.getElementById('protocol').value.trim();
             const client   = document.getElementById('clientName').value.trim();
             const rawDate  = document.getElementById('currentDate').value;
-            const date     = rawDate ? rawDate.split('-').reverse().join('/') : '—';
+            let date = '—';
+            if (rawDate) {
+                const parts = rawDate.split('T');
+                if (parts.length === 2) {
+                    date = parts[0].split('-').reverse().join('/') + ' às ' + parts[1];
+                } else {
+                    date = rawDate.split('-').reverse().join('/');
+                }
+            }
 
             let result = '';
             const previewDiv = document.getElementById('preview');
@@ -863,16 +917,31 @@ Protocolo: ${protocol}`;
                     let txt =
 `TREINAMENTO
 
-${ordinal} Treinamento feito em ${date} com ${part}.
+Protocolo do Atendimento: ${protocol}
+Treinamento feito em ${date} com ${part}.
 
 Assuntos abordados: ${subj}
 
-Duração: ${dur} / ${left}
+Duração: ${dur} hora / ${left} hora(s) restante(s)
 
 Observações: ${obs}`;
 
+                    // Captura de Pendências
+                    const pendencyRows = document.querySelectorAll('.pendency-row');
+                    let pendenciesText = '';
+                    if (pendencyRows.length > 0) {
+                        pendencyRows.forEach(row => {
+                            const text = row.querySelector('.pendency-text').value.trim();
+                            const resp = row.querySelector('.pendency-resp').value;
+                            if (text) {
+                                pendenciesText += `- ${text} (Responsável: ${resp})\n`;
+                            }
+                        });
+                    }
+
+                    if (pendenciesText) txt += `\n\nPendências Atuais:\n${pendenciesText.trim()}`;
                     if (meetings.trim()) txt += `\n\nReuniões agendadas:\n${meetings}`;
-                    txt += `\n\nProtocolo: ${protocol}`;
+                    
                     result = txt;
                     break;
                 }
