@@ -502,11 +502,8 @@
             </div>
         </div>
 
-        <!-- CARD: COMENTÁRIO JIRA -->
         <div class="card">
             <div class="card-title">🚀 Comentários Jira</div>
-
-            <!-- TYPE SELECTOR -->
             <div class="type-selector">
                 <button class="type-btn active active-kickoff"  data-type="kickoff"    onclick="setType('kickoff')">🟣<br>Kickoff</button>
                 <button class="type-btn"                        data-type="treinamento" onclick="setType('treinamento')">🟢<br>Treinamento</button>
@@ -515,16 +512,12 @@
                 <button class="type-btn"                        data-type="golive"      onclick="setType('golive')">🟠<br>Go-Live</button>
             </div>
 
-            <!-- DYNAMIC FIELDS -->
             <div id="fields-container" class="fields-anim"></div>
 
-            <!-- GENERATE BUTTON -->
             <div class="btn-row" style="margin-top:20px;">
                 <button class="btn btn-primary" onclick="generateJira()">⚡ Gerar Comentário</button>
                 <button class="btn btn-slate"   onclick="clearFields()">🗑️ Limpar Campos</button>
             </div>
-
-            <!-- PREVIEW -->
             <div id="preview-wrap" class="preview-wrap">
                 <div class="preview-header">
                     <span class="preview-label">Preview</span>
@@ -697,41 +690,50 @@
                             <textarea id="next_meetings" placeholder="Ex: 2° Treinamento dia 19/05 às 10:00"></textarea>
                         </div>
                     </div>`;
-                // garante que o botão ativo bate com o subtype atual
+             
                 document.querySelectorAll('.train-btn').forEach(b => {
                     b.classList.toggle('active', b.dataset.sub === currentTrainSubtype);
                 });
 
-            } else if (currentType === 'ativacao') {
-                c.innerHTML = `
+            } c.innerHTML = `
                     <div class="grid-2">
+                        <div class="field"><label>Canal</label><input type="text" id="channel"></div>
+                        <div class="field"><label>Participantes</label><input type="text" id="participantes"></div>
+                        <div class="field"><label>Número</label><input type="text" id="phone"></div>
+                        <div class="field"><label>FB ID</label><input type="text" id="fbid"></div>
+                        <div class="field"><label>WABA ID</label><input type="text" id="waba"></div>
+                        <div class="field"><label>Portfólio</label><input type="text" id="portfolio"></div>
+                        
+                        <!-- Nova pergunta sobre a linha de crédito -->
                         <div class="field">
-                            <label>Canal</label>
-                            <input type="text" id="channel" placeholder="Ex: WhatsApp">
+                            <label>Teve linha de crédito?</label>
+                            <select id="teveLinhaCredito">
+                                <option value="nao">Não</option>
+                                <option value="sim">Sim</option>
+                            </select>
                         </div>
-                        <div class="field">
-                            <label>Participantes</label>
-                            <input type="text" id="participantes" placeholder="Ex: Telecom net">
-                        </div>
-                        <div class="field">
-                            <label>Número</label>
-                            <input type="text" id="phone" placeholder="Ex: +55 49 9999-9999">
-                        </div>
-                        <div class="field">
-                            <label>FB Profile / ID</label>
-                            <input type="text" id="fbid" placeholder="Ex: 123456789">
-                        </div>
-                        <div class="field">
-                            <label>WABA ID</label>
-                            <input type="text" id="waba" placeholder="Ex: 987654321">
-                        </div>
-                        <div class="field">
-                            <label>Nome Portfólio</label>
-                            <input type="text" id="portfolio" placeholder="Ex: Telecom net">
-                        </div>
-                    </div>`;
 
-            } else if (currentType === 'atualizacao') {
+                        <!-- Campo que ficará oculto por padrão -->
+                        <div class="field" id="containerWabaCredito" style="display: none;">
+                            <label>ID da conta WABA (Linha de Crédito)</label>
+                            <input type="text" id="wabaCredito">
+                        </div>
+                    </div>
+                `;
+
+              
+                const selectCredito = document.getElementById('teveLinhaCredito');
+                const containerWabaCredito = document.getElementById('containerWabaCredito');
+                const inputWabaCredito = document.getElementById('wabaCredito');
+
+                selectCredito.addEventListener('change', function() {
+                    if (this.value === 'sim') {
+                        containerWabaCredito.style.display = 'block';
+                    } else {
+                        containerWabaCredito.style.display = 'none';  
+                        inputWabaCredito.value = '';                 
+                    }
+                }); else if (currentType === 'atualizacao') {
                 c.innerHTML = `
                     <div class="field">
                         <label>Situação do Andamento</label>
@@ -946,25 +948,12 @@ Observações: ${obs}`;
                     break;
                 }
                 case 'ativacao': {
-                    result =
-`ATIVAÇÃO DE CANAIS
+                let valorWabaCredito = v('wabaCredito');
+                
+                let textoCredito = valorWabaCredito ? `\nWABA ID Crédito: ${valorWabaCredito}` : '';
 
-Participantes: ${v('participantes')}
-Nome Portfólio: ${v('portfolio')}
-Canal ativo: ${v('channel')}
-Número ativo: ${v('phone')}
-Perfil/FB ID: ${v('fbid')}
-WABA ID: ${v('waba')}
-Protocolo: ${protocol}`;
-                    break;
-                }
-                case 'atualizacao': {
-                    result =
-`ATUALIZAÇÃO
-
-${v('status_text')}
-
-Protocolo: ${protocol}`;
+                result = `ATIVAÇÃO DE CANAIS\n\nParticipantes: ${v('participantes')}\nPortfólio: ${v('portfolio')}\nCanal: ${v('channel')}\nNúmero: ${v('phone')}\nPerfil ID: ${v('fbid')}\nWABA ID: ${v('waba')}${textoCredito}\nProtocolo: ${protocol}`;
+            }};
                     break;
                 }
                 case 'golive': {
