@@ -955,15 +955,24 @@ Observações: ${obs}`;
                     
                     let textoCredito = valorWabaCredito ? `\nWABA ID Crédito: ${valorWabaCredito}` : '';
 
-                    result = `ATIVAÇÃO DE CANAIS\n\n
-                    Participantes: ${v('participantes')}\n
-                    feito em ${date}\n
-                    Portfólio: ${v('portfolio')}\n
-                    Canal: ${v('channel')}\n
-                    Número: ${v('phone')}\n
-                    Perfil ID: ${v('fbid')}\n
-                    WABA ID: ${v('waba')}${textoCredito}\n
-                    Protocolo: ${protocol}`;
+                    result = 
+`ATIVAÇÃO DE CANAIS
+Participantes: ${v('participantes')}
+
+feito em ${date}
+
+Portfólio: ${v('portfolio')}
+
+Canal: ${v('channel')}
+
+Número: ${v('phone')}
+
+Perfil ID: ${v('fbid')}
+
+WABA ID: ${v('waba')}${textoCredito}
+
+Protocolo: ${protocol}`;
+                    
                     break;
                 }
                 case 'atualizacao': {
