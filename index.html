@@ -695,7 +695,8 @@
                     b.classList.toggle('active', b.dataset.sub === currentTrainSubtype);
                 });
 
-            } c.innerHTML = `
+            } else if (currentType === 'ativacao') {
+                c.innerHTML = `
                     <div class="grid-2">
                         <div class="field"><label>Canal</label><input type="text" id="channel"></div>
                         <div class="field"><label>Participantes</label><input type="text" id="participantes"></div>
@@ -721,7 +722,7 @@
                     </div>
                 `;
 
-              
+                // Monitora a mudança do campo Sim/Não para abrir o campo texto
                 const selectCredito = document.getElementById('teveLinhaCredito');
                 const containerWabaCredito = document.getElementById('containerWabaCredito');
                 const inputWabaCredito = document.getElementById('wabaCredito');
@@ -733,7 +734,9 @@
                         containerWabaCredito.style.display = 'none';  
                         inputWabaCredito.value = '';                 
                     }
-                }); else if (currentType === 'atualizacao') {
+                });
+
+            } else if (currentType === 'atualizacao') {
                 c.innerHTML = `
                     <div class="field">
                         <label>Situação do Andamento</label>
@@ -948,32 +951,35 @@ Observações: ${obs}`;
                     break;
                 }
                 case 'ativacao': {
-                let valorWabaCredito = v('wabaCredito');
-                
-                let textoCredito = valorWabaCredito ? `\nWABA ID Crédito: ${valorWabaCredito}` : '';
+                    let valorWabaCredito = v('wabaCredito');
+                    
+                    let textoCredito = valorWabaCredito ? `\nWABA ID Crédito: ${valorWabaCredito}` : '';
 
-                result = `ATIVAÇÃO DE CANAIS\n\nParticipantes: ${v('participantes')}\nPortfólio: ${v('portfolio')}\nCanal: ${v('channel')}\nNúmero: ${v('phone')}\nPerfil ID: ${v('fbid')}\nWABA ID: ${v('waba')}${textoCredito}\nProtocolo: ${protocol}`;
-            }};
+                    result = `ATIVAÇÃO DE CANAIS\n\nParticipantes: ${v('participantes')}\nPortfólio: ${v('portfolio')}\nCanal: ${v('channel')}\nNúmero: ${v('phone')}\nPerfil ID: ${v('fbid')}\nWABA ID: ${v('waba')}${textoCredito}\nProtocolo: ${protocol}`;
+                    break;
+                }
+                case 'atualizacao': {
+                    result = `ATUALIZAÇÃO DE ANDAMENTO\n\nData: ${date}\nStatus: ${v('status_text')}`;
                     break;
                 }
                 case 'golive': {
-    // Capturando horas e quantidades
-    const hPrev = v('h_prev') || '0';
-    const hAdd  = v('h_add')  || '0';
-    const tmpl  = v('templates_qty') || '0';
-    
-    // Capturando os selects do checklist
-    const dores = v('dores_solucionadas') || 'Não preenchido';
-    const tarefas = v('responsabilidade_tarefas') || 'Não preenchido';
-    const fluxo = v('fluxo_personalizado') || 'Não preenchido';
-    const canais = v('canais_ativados') || 'Não preenchido';
-    const templatesCriados = v('templates_criados') || 'Não preenchido';
-    const drive = v('link_drive') || 'Não preenchido';
-    const ia = v('ia_cartao') || 'Não preenchido';
-    const csat = v('pesquisa_csat') || 'Não preenchido';
-    const backup = v('backup_rotinas') || 'Não preenchido';
+                    // Capturando horas e quantidades
+                    const hPrev = v('h_prev') || '0';
+                    const hAdd  = v('h_add')  || '0';
+                    const tmpl  = v('templates_qty') || '0';
+                    
+                    // Capturando os selects do checklist
+                    const dores = v('dores_solucionadas') || 'Não preenchido';
+                    const tarefas = v('responsabilidade_tarefas') || 'Não preenchido';
+                    const fluxo = v('fluxo_personalizado') || 'Não preenchido';
+                    const canais = v('canais_ativados') || 'Não preenchido';
+                    const templatesCriados = v('templates_criados') || 'Não preenchido';
+                    const drive = v('link_drive') || 'Não preenchido';
+                    const ia = v('ia_cartao') || 'Não preenchido';
+                    const csat = v('pesquisa_csat') || 'Não preenchido';
+                    const backup = v('backup_rotinas') || 'Não preenchido';
 
-    result = 
+                    result = 
 `Go-Live
 
 A validação do Go Live foi concluída com sucesso. O checklist utilizado teve como base a proposta comercial adquirida pelo cliente, garantindo que todas as entregas previstas em contrato fossem contempladas. As configurações básicas do sistema foram realizadas, incluindo a ativação dos canais contratados e a definição dos fluxos conforme as necessidades levantadas junto ao cliente. O horário de suporte foi configurado conforme acordado.
@@ -991,8 +997,8 @@ Ao todo, foram realizadas ${hPrev} horas de treinamento previstas em contrato.
 - Pesquisa CSAT enviada: ${csat}
 - Backup e Rotinas configurados: ${backup}`;
 
-    break;
-}
+                    break;
+                }
             }
 
             previewDiv.style.borderLeftColor = colorMap[currentType];
