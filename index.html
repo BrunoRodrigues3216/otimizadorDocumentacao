@@ -284,6 +284,7 @@
         .type-btn:hover { border-color: var(--primary); color: var(--text); }
         .type-btn.active { color: white; border-color: transparent; }
         .type-btn.active-kickoff   { background: var(--kickoff); }
+        .type-btn.active-kickoff   { background: var(--portfolio); }
         .type-btn.active-trein     { background: var(--treinamento); }
         .type-btn.active-ativacao  { background: var(--ativacao); }
         .type-btn.active-atualiz   { background: var(--atualizacao); }
@@ -506,6 +507,7 @@
             <div class="card-title">🚀 Comentários Jira</div>
             <div class="type-selector">
                 <button class="type-btn active active-kickoff"  data-type="kickoff"    onclick="setType('kickoff')">🟣<br>Kickoff</button>
+                <button class="type-btn"                        data-type="portfolio"   onclick="setType('portfolio')">🟣<br>Portfólio</button>
                 <button class="type-btn"                        data-type="treinamento" onclick="setType('treinamento')">🟢<br>Treinamento</button>
                 <button class="type-btn"                        data-type="ativacao"    onclick="setType('ativacao')">🔴<br>Ativação</button>
                 <button class="type-btn"                        data-type="atualizacao" onclick="setType('atualizacao')">🔵<br>Atualização</button>
@@ -541,7 +543,8 @@
         const trainDefaults = {
             configs: 'dashboard inicial, usuários, menu configurações ( empresas, etiquetas, departamentos, motivos de atendimentos, feriados, pausas, permissões )',
             fluxo:   'agentes virtuais e fluxo de comunicação.',
-            usab:    'Opções dentro de um atendimento ( transferir, participantes, ligação do whatsapp, encerrar, dashboard do cliente, atalhos de chat ), dashboard inicial, dashboard analítico, menu de atendimento encerrados, menu atendimentos com o bot, menu atendimentos em andamentos, central de ajuda, manoel, opções de personalização do opa ( modo escuro/claro ), chat e grupos internos para conversa dentro do opa.'
+            usab:    'Opções dentro de um atendimento ( transferir, participantes, ligação do whatsapp, encerrar, dashboard do cliente, atalhos de chat ), dashboard inicial, dashboard analítico, menu de atendimento encerrados, menu atendimentos com o bot, menu atendimentos em andamentos, central de ajuda, manoel, opções de personalização do opa ( modo escuro/claro ), chat e grupos internos para conversa dentro do opa.',
+            telefonia: 'Criação de ramais da telefonia, configurações de atalhos, toques e tempo de chamadada, menu telefonia em usuários e configuração de código PABX em departamentos. Visualização de informação através do dashboard analítico e validação do fluxo de comunicação para telefonia.'
         };
 
         // ── PENDENCIES SCRIPT INJECTION ──
@@ -631,6 +634,30 @@
                         </div>
                     </div>`;
 
+            }else if (currentType === 'portfolio') {
+                c.innerHTML = `
+                    <div class="grid-2">
+                        <div class="field">
+                            <label>FB ID</label>
+                            <input type="text" id="fbid" placeholder="Ex: 1232245">
+                        </div>
+                        <div class="field">
+                            <label>Nome Portfólio</label>
+                            <input type="text" id="nomeportfolio" placeholder="Ex: Rodrigues LTDA">
+                        </div>
+                        <div class="field">
+                            <label>Conta Facebook</label>
+                            <input type="text" id="contafacebook" placeholder="Ex: Cleiton Silva">
+                        </div>
+                         <div class="field">
+                            <label>Status Portfólio</label>
+                            <select id="statusportfolio">
+                                <option value="verificado">Verificado</option>
+                                <option value="analise">Em Análise</option>
+                            </select>
+                        </div>
+                    </div>`;
+
             } else if (currentType === 'treinamento') {
                 c.innerHTML = `
                     <div class="info-row">💡 Selecione o tipo de treinamento para preencher os assuntos automaticamente.</div>
@@ -638,6 +665,7 @@
                         <button class="train-btn active" data-sub="configs"  onclick="setTrainSubtype('configs')">⚙️ Configurações Gerais</button>
                         <button class="train-btn"        data-sub="fluxo"    onclick="setTrainSubtype('fluxo')">🔀 Fluxo de Comunicação</button>
                         <button class="train-btn"        data-sub="usab"     onclick="setTrainSubtype('usab')">🖥️ Usabilidade</button>
+                        <button class="train-btn"        data-sub="usab"     onclick="setTrainSubtype('telefonia')">📞 Telefonia</button>
                     </div>
                     <div class="grid-2">
                         <div class="field">
@@ -905,6 +933,23 @@ ${acts}
 
 Reuniões agendadas:
 ${meetings}
+
+Protocolo: ${protocol}`;
+                    break;
+                }case 'portfolio': {
+                    result = 
+`
+PORTFÓLIO
+
+Feito em ${date}
+
+Perfil ID: ${v('fbid')}
+
+Nome Portfólio: ${v('nomeportfolio')}
+
+Conta Facebook: ${v('contafacebook')}
+
+Status Portfólio: ${v('statusportfolio')}
 
 Protocolo: ${protocol}`;
                     break;
