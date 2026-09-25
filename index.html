@@ -9,6 +9,7 @@
         :root {
             --primary: #6366f1;
             --kickoff: #7c3aed;
+            --portfolio: #fcb51c;
             --treinamento: #059669;
             --ativacao: #dc2626;
             --atualizacao: #2563eb;
@@ -284,7 +285,7 @@
         .type-btn:hover { border-color: var(--primary); color: var(--text); }
         .type-btn.active { color: white; border-color: transparent; }
         .type-btn.active-kickoff   { background: var(--kickoff); }
-        .type-btn.active-kickoff   { background: var(--portfolio); }
+        .type-btn.active-portfolio   { background: var(--portfolio); }
         .type-btn.active-trein     { background: var(--treinamento); }
         .type-btn.active-ativacao  { background: var(--ativacao); }
         .type-btn.active-atualiz   { background: var(--atualizacao); }
@@ -506,7 +507,7 @@
         <div class="card">
             <div class="card-title">🚀 Comentários Jira</div>
             <div class="type-selector">
-                <button class="type-btn active active-kickoff"  data-type="kickoff"    onclick="setType('kickoff')">🟣<br>Kickoff</button>
+                <button class="type-btn"                        data-type="kickoff"    onclick="setType('kickoff')">🟣<br>Kickoff</button>
                 <button class="type-btn"                        data-type="portfolio"   onclick="setType('portfolio')">🟣<br>Portfólio</button>
                 <button class="type-btn"                        data-type="treinamento" onclick="setType('treinamento')">🟢<br>Treinamento</button>
                 <button class="type-btn"                        data-type="ativacao"    onclick="setType('ativacao')">🔴<br>Ativação</button>
@@ -665,7 +666,7 @@
                         <button class="train-btn active" data-sub="configs"  onclick="setTrainSubtype('configs')">⚙️ Configurações Gerais</button>
                         <button class="train-btn"        data-sub="fluxo"    onclick="setTrainSubtype('fluxo')">🔀 Fluxo de Comunicação</button>
                         <button class="train-btn"        data-sub="usab"     onclick="setTrainSubtype('usab')">🖥️ Usabilidade</button>
-                        <button class="train-btn"        data-sub="usab"     onclick="setTrainSubtype('telefonia')">📞 Telefonia</button>
+                        <button class="train-btn"        data-sub="telefonia"     onclick="setTrainSubtype('telefonia')">📞 Telefonia</button>
                     </div>
                     <div class="grid-2">
                         <div class="field">
